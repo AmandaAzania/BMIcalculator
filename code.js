@@ -1,43 +1,57 @@
-document.write("<div>");
-document.write("<form>");
-document.write("Weight(in Kilograms):<input type='float' id='weight' placeholder='weight in kg' /><br />");
-document.write("Height (in cms):<input type='float' id='height' placeholder='height in cm' /><br />");
-document.write('<input type="button" onclick="calculate()" value="Evaluate" /> <br />');
-document.write('BMI: <input id="ans" type="text" /><br />');
-document.write('Category: <input type="text" id="category" />');
-document.write('<input type="reset" value="Reset"/>');
-document.write('</form>');
-document.write("</div>");
+var age = document.getElementById("age");
+var height = document.getElementById("height");
+var weight = document.getElementById("weight");
+var male = document.getElementById("m");
+var female = document.getElementById("f");
+var form = document.getElementById("form");
 
-function calculate()
-{
-    var w = parseFloat(document.getElementById("weight").value);  
-
-    var h = parseFloat(document.getElementById("height").value)/100; 
-    var b = w/(h*h);  
-    document.getElementById("ans").value = String(b.toPrecision(3)) ; 
-    if (b < 18.5)
-    {
-        document.getElementById("category").value = "Underweight";
-    }
-    else if (b >= 18.5 && b <= 25)
-    {
-        document.getElementById("category").value = "Healthy weight";
-    }
-    else if (b > 25 && b <= 30)
-    {
-        document.getElementById("category").value = "Overweight";
-    }
-    else if (b > 30 && b <= 35)
-    {
-        document.getElementById("category").value = "Obese Class 1";
-    }
-    else if(b > 35 && b <= 40)
-    {
-        document.getElementById("category").value = "Obese Class 2";
-    }
-    else
-    {
-        document.getElementById("category").value = "Obese Class 3";
-    }
+function validateForm(){
+  if(age.value=='' || height.value=='' || weight.value=='' || (male.checked==false && female.checked==false)){
+    alert("All fields are required!");
+    document.getElementById("submit").removeEventListener("click", countBmi);
+  }else{
+    countBmi();
+  }
 }
+document.getElementById("submit").addEventListener("click", validateForm);
+
+function countBmi(){
+  var p = [age.value, height.value, weight.value];
+  if(male.checked){
+    p.push("male");
+  }else if(female.checked){
+    p.push("female");
+  }
+  form.reset();
+  var bmi = Number(p[2])/(Number(p[1])/100*Number(p[1])/100);
+      
+  var result = '';
+  if(bmi<18.5){
+    result = 'Underweight';
+     }else if(18.5<=bmi&&bmi<=24.9){
+    result = 'Healthy';
+     }else if(25<=bmi&&bmi<=29.9){
+    result = 'Overweight';
+     }else if(30<=bmi&&bmi<=34.9){
+    result = 'Obese';
+     }else if(35<=bmi){
+    result = 'Extremely obese';
+     }
+  
+  var h1 = document.createElement("h1");
+  var h2 = document.createElement("h2");
+
+  var t = document.createTextNode(result);
+  var b = document.createTextNode('BMI: ');
+  var r = document.createTextNode(parseFloat(bmi).toFixed(2));
+  
+  h1.appendChild(t);
+  h2.appendChild(b);
+  h2.appendChild(r);
+  
+  document.body.appendChild(h1);
+  document.body.appendChild(h2);
+  document.getElementById("submit").removeEventListener("click", countBmi);
+  document.getElementById("submit").removeEventListener("click", validateForm);
+}
+document.getElementById("submit").addEventListener("click", countBmi);
